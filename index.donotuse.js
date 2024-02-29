@@ -269,3 +269,8 @@ function deleteRamen(ramen, imgElement) {
         detailsComment.textContent = '';
     }
 }
+
+
+//----------------------------------------------------------------------------------------------
+// 
+
