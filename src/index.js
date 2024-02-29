@@ -24,7 +24,7 @@ function displayRamens() {
             ramenContainer.appendChild(deleteButton);
             menuDiv.appendChild(ramenContainer);
 
-            // Display the first ramen's details on page load
+            // Display the first ramen details on page load
             if (index === 0) {
                 handleClick(ramen);
             }
@@ -129,7 +129,7 @@ function addUpdateListener() {
     detailsComment.textContent = newComment;
   });
 }
-//^^^ Not sure if this is functioning properly. It just eliminated rating and comment when you update on site.
+//^^^ Not sure if this is functioning properly. It just eliminated rating and comment when you use update button on site.
 
 
 const main = (formElement) => {
