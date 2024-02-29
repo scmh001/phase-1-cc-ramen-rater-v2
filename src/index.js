@@ -6,13 +6,17 @@ function displayRamens() {
   fetch(url + 'ramens')
     .then(response => response.json())
     .then(ramens => {
-     
       const menuDiv = document.getElementById('ramen-menu');
-      ramens.forEach(ramen => {
+      ramens.forEach((ramen, index) => {
         const img = document.createElement('img');
         img.src = ramen.image;
         img.addEventListener('click', () => handleClick(ramen));
         menuDiv.appendChild(img);
+
+        // Display the first ramen's details on page load
+        if (index === 0) {
+          handleClick(ramen);
+        }
       });
     });
 }
