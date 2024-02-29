@@ -6,7 +6,7 @@ function displayRamens() {
   fetch(url + 'ramens')
     .then(response => response.json())
     .then(ramens => {
-      // Ensure the element with ID 'ramen-menu' exists in the HTML
+     
       const menuDiv = document.getElementById('ramen-menu');
       ramens.forEach(ramen => {
         const img = document.createElement('img');
@@ -33,35 +33,51 @@ function handleClick(ramen, event) {
 }
 
 function addSubmitListener(formElement) {
+  if (!formElement) {
+    console.error('Form element is not found');
+    return;
+  }
+
   formElement.addEventListener('submit', (event) => {
-      event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); // Prevent the default form submission
 
-      // Create a new ramen object from the form input values
-      const newRamen = {
-          name: event.target.name.value,
-          restaurant: event.target.restaurant.value,
-          image: event.target.image.value,
-          rating: event.target.rating.value,
-          comment: event.target.comment.value,
-      };
+    // Debugging: Log the event target to ensure it has the expected structure
+    console.log('Event target:', event.target);
 
-      // Get the div where the ramen images are displayed
-      const ramenMenuDiv = document.getElementById('ramen-menu');
+    // Create a new ramen object from the form input values
+    const newRamen = {
+      name: event.target.name ? event.target.name.value : undefined,
+      restaurant: event.target.restaurant ? event.target.restaurant.value : undefined,
+      image: event.target.image ? event.target.image.value : undefined,
+      rating: event.target.rating ? event.target.rating.value : undefined,
+      comment: event.target.comment ? event.target.comment.value : undefined,
+    };
 
-      // Create a new image element for the new ramen
-      const img = document.createElement('img');
-      img.src = newRamen.image;
+    // Debugging: Log the newRamen object to ensure it has the correct values
+    console.log('New ramen:', newRamen);
 
-      // Attach a click event listener to the new image
-      img.addEventListener('click', () => handleClick(newRamen));
+    // Get the div where the ramen images are displayed
+    const ramenMenuDiv = document.getElementById('ramen-menu');
+    if (!ramenMenuDiv) {
+      console.error('Ramen menu div is not found');
+      return;
+    }
 
-      // Append the new image to the ramen menu div
-      ramenMenuDiv.appendChild(img);
+    // Create a new image element for the new ramen
+    const img = document.createElement('img');
+    img.src = newRamen.image;
 
-      // Reset the form inputs
-      formElement.reset();
+    // Attach a click event listener to the new image
+    img.addEventListener('click', () => handleClick(newRamen));
+
+    // Append the new image to the ramen menu div
+    ramenMenuDiv.appendChild(img);
+
+    // Reset the form inputs
+    formElement.reset();
   });
 }
+
 
 
 const main = (formElement) => {
@@ -69,10 +85,15 @@ const main = (formElement) => {
   addSubmitListener(formElement);
 }
 
+
 document.addEventListener('DOMContentLoaded', () => {
   const formElement = document.getElementById('new-ramen');
   main(formElement);
 });
+
+//^^^^^^ had to wrap the call to main() in a DOMContentLoaded event listener in order to fix an "failed suite" error. This fixed it and allowed me to pass all tests. 
+
+
 
 export {
   displayRamens,
