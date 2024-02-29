@@ -1,26 +1,56 @@
  // index.js
 const url = "http://localhost:3000/"
 
-
 function displayRamens() {
-  fetch(url + 'ramens')
+    fetch(url + 'ramens')
     .then(response => response.json())
     .then(ramens => {
-      const menuDiv = document.getElementById('ramen-menu');
-      ramens.forEach((ramen, index) => {
-        const img = document.createElement('img');
-        img.src = ramen.image;
-        img.addEventListener('click', () => handleClick(ramen));
-        menuDiv.appendChild(img);
+        const menuDiv = document.getElementById('ramen-menu');
+        ramens.forEach((ramen, index) => {
+            const img = document.createElement('img');
+            img.src = ramen.image;
+            img.addEventListener('click', () => handleClick(ramen));
 
-        // Display the first ramen's details on page load
-        if (index === 0) {
-          handleClick(ramen);
-        }
-      });
+            // Create a delete button for each ramen
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent triggering the img click event
+                deleteRamen(ramen, img);
+            });
+
+            const ramenContainer = document.createElement('div');
+            ramenContainer.appendChild(img);
+            ramenContainer.appendChild(deleteButton);
+            menuDiv.appendChild(ramenContainer);
+
+            // Display the first ramen's details on page load
+            if (index === 0) {
+                handleClick(ramen);
+            }
+        });
     });
 }
 
+function deleteRamen(ramen, imgElement) {
+    // Remove the ramen image and button from the menu
+    imgElement.parentNode.remove();
+
+    // Clear the ramen detail view if this ramen is currently displayed
+    const detailImg = document.querySelector("#ramen-detail > .detail-image");
+    if (detailImg.src === ramen.image) {
+        const detailName = document.querySelector("#ramen-detail > .name");
+        const detailRestaurant = document.querySelector("#ramen-detail > .restaurant");
+        const detailsRating = document.getElementById("rating-display");
+        const detailsComment = document.getElementById("comment-display");
+
+        detailName.textContent = '';
+        detailRestaurant.textContent = '';
+        detailImg.src = '';
+        detailsRating.textContent = '';
+        detailsComment.textContent = '';
+    }
+}
 
 function handleClick(ramen, event) {
   const detailImg = document.querySelector("#ramen-detail > .detail-image");
@@ -82,11 +112,30 @@ function addSubmitListener(formElement) {
   });
 }
 
+function addUpdateListener() {
+  const editForm = document.getElementById('edit-ramen');
+  editForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    // Get the new rating and comment from the form
+    const newRating = document.getElementById('new-rating').value;
+    const newComment = document.getElementById('new-comment').value;
+
+    // Update the displayed rating and comment
+    const detailsRating = document.getElementById("rating-display");
+    const detailsComment = document.getElementById("comment-display");
+
+    detailsRating.textContent = newRating;
+    detailsComment.textContent = newComment;
+  });
+}
+//^^^ Not sure if this is functioning properly. It just eliminated rating and comment when you update on site.
 
 
 const main = (formElement) => {
   displayRamens();
   addSubmitListener(formElement);
+  addUpdateListener();
 }
 
 
